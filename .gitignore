@@ -2,6 +2,7 @@ push-pypi.sh
 src/test.py
 *.ui
 make.bat
+setup.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

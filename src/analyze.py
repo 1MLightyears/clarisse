@@ -31,7 +31,7 @@ def AddAWidget(widget_type,*args, **kwargs):
         return types_supported.ClrsDict(*args,**kwargs)
     elif isinstance(widget_type,typing._GenericAlias):
         if widget_type._name == "List":
-            return types_supported.ClrsList(ElementType=widget_type.__args__[0], *args, **kwargs)
+            return types_supported.ClrsList(ElementType=widget_type.__args__, *args, **kwargs)
         elif widget_type._name == "Dict":
             return types_supported.ClrsDict(ElementType=widget_type.__args__, *args, **kwargs)
         else:
@@ -46,9 +46,9 @@ def AnalyzeFunc(func,*args,**kwargs):
     arguments = inspect.getfullargspec(func)
     log.info("func={0},arguments={1}".format(func.__name__,arguments))
     widget_list=[]
-    arg_names=arguments.args
-    arg_annos = arguments.annotations
-    arg_defaults=arguments.defaults
+    arg_names=arguments.args or []
+    arg_annos = arguments.annotations or []
+    arg_defaults=arguments.defaults or []
     for name in arg_names:
         if name in arg_annos:
             widget_list.append(AddAWidget(arg_annos[name], name=name, *args, **kwargs))

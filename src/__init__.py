@@ -15,7 +15,7 @@ from functools import wraps
 
 from GUI import ClrsGUI
 
-from .analyze import AnalyzeFunc
+#from .analyze import AnalyzeFunc
 
 
 __all__ = ["Clarisse", "version"]

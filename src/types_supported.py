@@ -93,7 +93,7 @@ class ClrsList(QTextEdit):
         if name!="":
             self.setObjectName(name)
         self.target_kwargs = target_kwargs
-        self.ElementType=ElementType
+        self.ElementType = ElementType
 
     def setDefault(self, default=None):
         if isinstance(default,list):
@@ -101,7 +101,7 @@ class ClrsList(QTextEdit):
 
     def getValue(self):
         t = self.placeholderText() if self.toPlainText() == "" else self.toPlainText()
-        if self.ElementType:
+        if (isinstance(self.ElementType,tuple))and(len(self.ElementType)>0):
             return [self.ElementType(i) for i in t.split("\n")]
         return [i for i in t.split("\n")]
 
@@ -135,7 +135,7 @@ class ClrsDict(QTableWidget):
             self.setObjectName(name)
         self.target_kwargs = target_kwargs
         self.setDefaultDropAction(Qt.TargetMoveAction)
-        self.ElementType=ElementType
+        self.ElementType = ElementType
 
     def setDefault(self, default=None):
         if default != None:

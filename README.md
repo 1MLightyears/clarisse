@@ -2,6 +2,10 @@
 
 # Clarisse
 
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/clarisse?style=plastic)![PyPI](https://img.shields.io/pypi/v/clarisse?style=plastic)
+
+:cn::<a href="./README_zh-cn.md">说明文档</a>
+
 Clarisse is a light-weighted Python function GUI framework.
 
 With at least one single line of code, you can easily create a user-friendly GUI for your code(or a part of your code), yet not make other changes!
@@ -57,7 +61,9 @@ You can run `func()` multiple times ( by clicking the `Run` button ) and check t
 #pip install clarisse
 ```
 
-clarisse uses PySide2 as its backend GUI framework, so PySide2 is also needed to be installed.
+Clarisse uses PySide2 as its backend GUI framework.
+
+Clarisse works well on Python 3.9.1 .
 
 ### Customization
 
@@ -68,6 +74,28 @@ clarisse uses PySide2 as its backend GUI framework, so PySide2 is also needed to
    3. `description` is the introduction of the function as a default(`func.__doc__`), but could also be customized to any other words you like;
    4. `args_desc` is a list of string, each is used to replace the description label of an argument.
    5. `args_kwdesc` is similar with `args_desc`, but description label are given as a `dict` like  `{[argument name]:[argument description]}`.
+3. Clarisse has a good compatibility with PyInstaller. You can set Clarisse as an interface of your command-line program, pack it through PyInstaller and distribute the binary file.
+
+##### Typing
+
+Clarisse choose widgets for arguments based on their types. 
+
+Note that if a type is not supported by Clarisse, it'll use an `ClrsUnknown` type to mark the argument. In that case the value would be shown/edited/passed in `str`.
+
+| argument types | Clarisse widgets   | example                    |
+| -------------- | ------------------ | -------------------------- |
+| `int`          | spin box           | <img src="./img/arg1.png"> |
+| `float`        | spin box for float | <img src="./img/arg2.png"> |
+| `str`          | line edit box      | <img src="./img/arg3.png"> |
+| `bool`         | check box          | <img src="./img/arg4.png"> |
+| `list`         | text edit box      | <img src="./img/arg5.png"> |
+| `dict`         | table              | <img src="./img/arg6.png"> |
+
+##### Attention
+
+- if you used `typing.List[a_type,...]` , Clarisse will call a `a_type.__init__(arg_text:str)` to give an `a_type`object to the function, make sure you have appropriate constructor;
+
+- if you used `typing.Dict[key_type,value_type,...]` , Clarisse will call `key_type.__init__(key_text:str)`and `value_type.__init__(value_text:str)` to give an `{key_type:value_type}`dict to the function, make sure you have appropriate constructor.
 
 ##### Examples
 
@@ -110,14 +138,14 @@ print(func())
 
 *Why not gooey?*
 
-Gooey is an outstanding and all-around framework for almost all kinds of python programs, but it
+<a href="https://github.com/chriskiehl/Gooey">Gooey</a> is an outstanding and all-around framework for almost all kinds of python programs, but it
 
 - needs code modifications;
 - you have to implement an `ArgumentParser` : sad story for `fire` and `click` users :cry:
 - works only for command line entrance;
 - ~~I failed to learn it - the doc of gooey is too too much for a non-native speaker like me :sob:~~
 
-Of course I advise you to choose gooey if you're familiar to it and need deep customization, but if you only need a light-weight, pain-less, quick-deployment GUI framework, maybe clarisse is an alternative!
+Of course I advise you to choose gooey if you're familiar to it and need deep customization, but if you only need a light-weight, pain-less, quick-deployment GUI framework, maybe Clarisse is an alternative!
 
 ### ...and, Future!
 
@@ -132,7 +160,12 @@ Of course I advise you to choose gooey if you're familiar to it and need deep cu
 
 Thanks to the <a href="https://github.com/google/python-fire/">fire</a> library that inspired me the idea;
 
-Thanks to the <a href="https://github.com/google/latexify_py/">latexify_py</a> module that gives me the idea of interface and the lessons of  python syntax analyzing and the usage of  `inspect` <font size=1>hey dude I also contributed to latexify_py that's a really handy module go star it</font> 
+Thanks to the <a href="https://github.com/google/latexify_py/">latexify_py</a> module that gives me the idea of interface and the lessons of  python syntax analyzing and the usage of  `inspect`;<font size=1>hey dude I also contributed to latexify_py that's a really handy module go star it</font> 
 
-Thanks to <a href="https://www.fanfiction.net/u/1596712/Hieronym">Hieronym</a>, for the splendid fan fiction *<a href="https://www.fanfiction.net/s/7406866/1/To-the-Stars">To The Stars</a>* <font size=1>the best fanfiction space opera I've ever read</font>, which gives the name of this module.
+Thanks to <a href="https://www.fanfiction.net/u/1596712/Hieronym">@Hieronym</a>, for the splendid fanfiction *<a href="https://www.fanfiction.net/s/7406866/1/To-the-Stars">To The Stars</a>* <font size=1>the best fanfiction space opera I've ever read</font>, which gives the name of this module.
 
+
+
+1MLightyears
+
+20201215

@@ -70,6 +70,7 @@ class Page(QWidget):
         self.margin = margin
         self.vert_spacing =vert_spacing
         self.stdout = sys.stdout
+        self.stderr = sys.stderr
         self.Current_Layout=getattr(self,Current_Layout,self.TopBottomLayout)
 
         # Initiallize: create widgets
@@ -161,6 +162,7 @@ class Page(QWidget):
         # redirect standard output
         self.redirect_IO = RedirectIO()
         sys.stdout = self.redirect_IO
+        sys.stderr = self.redirect_IO
 
         # avoid multiple clicks
         self.run_button.setText("Running...")
@@ -172,6 +174,7 @@ class Page(QWidget):
         Restore run_button.
         """
         sys.stdout = self.stdout
+        sys.stderr = self.stderr
         show_output(self.redirect_IO.read(),self.func.__name__,self.run_thread.ret)
         self.run_button.setText("Run")
         self.run_button.setEnabled(True)

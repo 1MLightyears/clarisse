@@ -52,6 +52,7 @@ class ClrsGUI():
         self.central_widget = QWidget(self.main_window)
         self.main_window.setCentralWidget(self.central_widget)
         self.main_window.OnResize.connect(self.ReDrawAllPages)
+        self.main_window.setMinimumWidth(320)
 
     def Parse(self,
             backend,
