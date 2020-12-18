@@ -24,7 +24,7 @@ class Ui_MainWindow(QMainWindow, object):
     OnResize=Signal(QSize)
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(320,480)
+        MainWindow.resize(480,480)# TODO: find a better way for this instead of set a hard value
 
         self.retranslateUi(MainWindow)
         QMetaObject.connectSlotsByName(MainWindow)
@@ -52,7 +52,7 @@ class ClrsGUI():
         self.central_widget = QWidget(self.main_window)
         self.main_window.setCentralWidget(self.central_widget)
         self.main_window.OnResize.connect(self.ReDrawAllPages)
-        self.main_window.setMinimumWidth(320)
+        self.main_window.setMinimumWidth(self.main_window.width())
 
     def Parse(self,
             backend,
@@ -73,10 +73,10 @@ class ClrsGUI():
             self.pages.append(Page(backend,*args,**kwargs))
             self.pages[-1].setParent(self.central_widget)
             self.DrawFuncInPage(self.pages[0], backend,default_args,default_kwargs,args_desc,args_kwdesc)
-            self.main_window.resize(
-                max([i.description.width() + i.description.x() + i.margin for i in self.pages]),
-                self.main_window.height()
-            )  # resize main_window's width to show all the description
+            #self.main_window.resize(
+            #    max([i.description.width() + i.description.x() + i.margin for i in self.pages]),
+            #    self.main_window.height()
+            #)  # resize main_window's width to show all the description
             self.main_window.setWindowTitle("{0} - Clarisse GUI".format(backend.__name__))
         elif isinstance(a, object):
             self.tabs = QTabWidget(self.central_widget)
@@ -98,7 +98,7 @@ class ClrsGUI():
         """
         # inspect func
         page.widget_list = AnalyzeFunc(func)
-        log.info("page name={0},widget_list={1}".format(page.objectName(),[i.__name__ for i in page.widget_list]))
+        log.info("start of draw page, widget_list={0}".format([i.__name__ for i in page.widget_list]))
 
         # add widgets to canvas
         if page.widget_list != []:
@@ -126,13 +126,13 @@ class ClrsGUI():
 
         # canvas resize
         page.canvas.resize(
-            page.width(),
+            page.canvas.width(),
             page.canvas.y()+page.widget_list[-1].y()+page.widget_list[-1].height()+page.margin
         )
         log.info("canvas:{0}".format(page.canvas.geometry()))
         log.info("widget_scroll geometry={0}".format(page.widget_scroll.geometry()))
         log.info("page geometry={0}".format(page.geometry()))
-
+        log.info("end of draw page")
         # modify Z-order
         page.run_button.raise_()
         page.description.raise_()
@@ -145,7 +145,7 @@ class ClrsGUI():
         if self.tabs != None:
             self.tabs.resize(new_size)
         for page in self.pages:
-            page.Current_Layout(new_size)
+            page=page.Current_Layout(page,new_size)
 
         log.info("resize all pages to {0}".format(self.central_widget.geometry()))
 

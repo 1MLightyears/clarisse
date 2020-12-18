@@ -160,9 +160,9 @@ Of course I advise you to choose gooey if you're familiar to it and need deep cu
 
 Thanks to the <a href="https://github.com/google/python-fire/">fire</a> library that inspired me the idea;
 
-Thanks to the <a href="https://github.com/google/latexify_py/">latexify_py</a> module that gives me the idea of interface and the lessons of  python syntax analyzing and the usage of  `inspect`;<font size=1>hey dude I also contributed to latexify_py that's a really handy module go star it</font> 
+Thanks to the <a href="https://github.com/google/latexify_py/">latexify_py</a> module that gives me the idea of interface and the lessons of  python syntax analyzing and the usage of  `inspect`;~~hey dude I also contributed to latexify_py that's a really handy module go star it~~
 
-Thanks to <a href="https://www.fanfiction.net/u/1596712/Hieronym">@Hieronym</a>, for the splendid fanfiction *<a href="https://www.fanfiction.net/s/7406866/1/To-the-Stars">To The Stars</a>* <font size=1>the best fanfiction space opera I've ever read</font>, which gives the name of this module.
+Thanks to <a href="https://www.fanfiction.net/u/1596712/Hieronym">@Hieronym</a>, for the splendid fanfiction *<a href="https://www.fanfiction.net/s/7406866/1/To-the-Stars">To The Stars</a>* ~~the best fanfiction space opera I've ever read~~, which gives the name of this module.
 
 
 

@@ -13,6 +13,7 @@ from PySide2.QtWidgets import QPushButton,QScrollArea,QLineEdit,QLabel,QWidget,Q
 from PySide2.QtCore import QThread, Signal, QSize, Qt
 
 from output_dialog import show_output
+from layouts import Layout_Dict
 
 import log
 import sys
@@ -42,12 +43,8 @@ class RunThread(QThread):
     def run(self):
         log.info("run func with args={0},kwargs={1}".format(self.args,self.kwargs))
         self.ret = self.func(*self.args, **self.kwargs)
+        log.info("func returns {0}".format(self.ret))
         return self.ret
-
-class PageCanvas(QWidget):
-    OnResize = Signal(QSize)
-    def resizeEvent(self, event):
-        self.OnResize.emit(self.size())
 
 class Page(QWidget):
     def __init__(self,
@@ -56,7 +53,7 @@ class Page(QWidget):
             func_kwargs={},
             margin=30,
             vert_spacing=10,
-            Current_Layout="TopBottomLayout",
+            current_layout="TopBottomLayout",
             description="",
             *args, **kwargs
         ):
@@ -71,22 +68,27 @@ class Page(QWidget):
         self.vert_spacing =vert_spacing
         self.stdout = sys.stdout
         self.stderr = sys.stderr
-        self.Current_Layout=getattr(self,Current_Layout,self.TopBottomLayout)
+        self.Current_Layout = Layout_Dict["TopBottomLayout"]
+        if current_layout in Layout_Dict:
+            self.Current_Layout=Layout_Dict[current_layout]
 
         # Initiallize: create widgets
-        # main_window -> central_widget -> page ->  widget_scroll -> canvas
-        self.canvas = PageCanvas()
+        self.canvas = QWidget()
 
         # create a scroll bar
         self.widget_scroll = QScrollArea(self)
-        self.widget_scroll.setWidget(self.canvas)
 
         # use a QFormLayout to place widgets
         self.form_layout = QFormLayout()
+
+        # main_window -> central_widget -> page ->  widget_scroll -> canvas
+        self.widget_scroll.setWidget(self.canvas)
+        self.canvas.setLayout(self.form_layout)
+
+        # set form_layout
         self.form_layout.setMargin(self.margin)
         self.form_layout.setSpacing(self.vert_spacing)
         self.form_layout.setRowWrapPolicy(self.form_layout.WrapLongRows)
-        self.canvas.setLayout(self.form_layout)
 
         # default description is func.__doc__
         description = self.func.__doc__ if description=="" else description
@@ -94,16 +96,14 @@ class Page(QWidget):
         self.description.setParent(self)
         self.description.setTextFormat(Qt.MarkdownText)
         self.description.setOpenExternalLinks(True)
-        log.info("description geometry={0}".format(self.description.geometry()))
 
         # create a Run button to excute the function
         self.run_button = QPushButton("&Run", self)
         self.run_button.clicked.connect(self.Run)
         self.run_button.adjustSize()
 
-        self.Current_Layout(self.size())
-
-        log.info("button geometry={geometry}".format(geometry=self.run_button.geometry()))
+        # set custom layout
+        self = self.Current_Layout(self, self.size())
 
         # allow the user to run the func multiple times to test output
         # but only the last return is delivered (as a confirmed run)
@@ -116,40 +116,6 @@ class Page(QWidget):
         """
         self.args = args + self.args[len(args):]
         self.kwargs.update(kwargs)
-
-    ### Layouts
-    def TopBottomLayout(self, page_size):
-        """
-        set an up-down layout for self.page.
-        """
-        self.resize(page_size)
-
-        # description should be placed on the top
-        self.description.move(self.x()+self.margin,self.y()+self.margin)
-        self.description.adjustSize()
-
-        # run_button should be placed below description
-        self.run_button.setGeometry(
-            self.margin,
-            self.description.y()+self.description.height()+self.margin,
-            page_size.width() - 2*self.margin,
-            self.run_button.height()
-        )
-
-        # canvas should be placed below run_button
-        self.canvas.setGeometry(
-            self.x(),
-            self.run_button.y()+self.run_button.height(),
-            page_size.width()-self.margin, # scroll has width
-            self.canvas.height()
-        )
-
-        # widget_scroll should be placed between the end of page and run_button
-        self.widget_scroll.setGeometry(
-            self.x(),
-            self.run_button.y()+self.run_button.height(),
-            page_size.width(),
-            page_size.height()-self.run_button.y()-self.run_button.height())
 
     ### slot functions
     def Run(self):

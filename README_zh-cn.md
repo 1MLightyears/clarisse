@@ -160,9 +160,9 @@ print(func())
 
 感谢 <a href="https://github.com/google/python-fire/">fire</a> 包给我的启发；
 
-感谢 <a href="https://github.com/google/latexify_py/">latexify_py</a> 包，Clarisse接口的设计和对于Python语法的分析均来自于我在这个包中所学到的知识； <font size=1>这包好用极了快去用顺便点个star</font> 
+感谢 <a href="https://github.com/google/latexify_py/">latexify_py</a> 包，Clarisse接口的设计和对于Python语法的分析均来自于我在这个包中所学到的知识； ~~这包好用极了快去用顺便点个star~~
 
-感谢 <a href="https://www.fanfiction.net/u/1596712/Hieronym">@Hieronym</a>, 创作了 *<a href="https://www.fanfiction.net/s/7406866/1/To-the-Stars">飞向星空</a>* <font size=1>这是我看过最好的同人太空歌剧小说！</font>，也是本框架的取名来源。
+感谢 <a href="https://www.fanfiction.net/u/1596712/Hieronym">@Hieronym</a>, 创作了 *<a href="https://www.fanfiction.net/s/7406866/1/To-the-Stars">飞向星空</a>* ~~这是我看过最好的同人太空歌剧小说！~~，也是本框架的取名来源。
 
 
 

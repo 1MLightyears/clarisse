@@ -15,12 +15,12 @@ from functools import wraps
 
 from GUI import ClrsGUI
 
-#from .analyze import AnalyzeFunc
+#from .analyze import AnalyzeFunc # TODO: uncomment the import before release
 
 
 __all__ = ["Clarisse", "version"]
 
-version="v0.0.1"
+version="v0.0.2"
 
 def Clarisse(*args, **kwargs):
     def middle(func):
