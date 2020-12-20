@@ -70,30 +70,30 @@ class Page(QWidget):
         self.stderr = sys.stderr
         self.Current_Layout = Layout_Dict["TopBottomLayout"]
         if current_layout in Layout_Dict:
-            self.Current_Layout=Layout_Dict[current_layout]
+            self.Current_Layout=Layout_Dict[current_layout](self)
 
-        # Initiallize: create widgets
+        # Initiallize
         self.canvas = QWidget()
+        self.canvas.setObjectName("canvas")
 
         # create a scroll bar
         self.widget_scroll = QScrollArea(self)
+        self.widget_scroll.setObjectName("widget_scroll")
 
         # use a QFormLayout to place widgets
-        self.form_layout = QFormLayout()
+        self.canvas_layout = QFormLayout()
+        self.canvas_layout.setObjectName("canvas_layout")
 
-        # main_window -> central_widget -> page ->  widget_scroll -> canvas
-        self.widget_scroll.setWidget(self.canvas)
-        self.canvas.setLayout(self.form_layout)
-
-        # set form_layout
-        self.form_layout.setMargin(self.margin)
-        self.form_layout.setSpacing(self.vert_spacing)
-        self.form_layout.setRowWrapPolicy(self.form_layout.WrapLongRows)
+        # set canvas_layout
+        self.canvas_layout.setMargin(self.margin)
+        self.canvas_layout.setSpacing(self.vert_spacing)
+        self.canvas_layout.setRowWrapPolicy(self.canvas_layout.WrapLongRows)
 
         # default description is func.__doc__
         description = self.func.__doc__ if description=="" else description
         self.description = QLabel(description) # doesn't need to scroll
         self.description.setParent(self)
+        self.description.setWordWrap(True)
         self.description.setTextFormat(Qt.MarkdownText)
         self.description.setOpenExternalLinks(True)
 
@@ -102,20 +102,10 @@ class Page(QWidget):
         self.run_button.clicked.connect(self.Run)
         self.run_button.adjustSize()
 
-        # set custom layout
-        self = self.Current_Layout(self, self.size())
-
         # allow the user to run the func multiple times to test output
         # but only the last return is delivered (as a confirmed run)
         self.run_thread = RunThread(self.func, self.args, self.kwargs)
         self.run_thread.finished.connect(self.Done)
-
-    def setArgs(self, *args, **kwargs):
-        """
-        Set and update arguments for running self.func.
-        """
-        self.args = args + self.args[len(args):]
-        self.kwargs.update(kwargs)
 
     ### slot functions
     def Run(self):

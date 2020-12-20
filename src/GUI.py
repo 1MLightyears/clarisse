@@ -33,10 +33,9 @@ class Ui_MainWindow(QMainWindow, object):
         _translate = QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
 
-    def resizeEvent(self,event):
-        QMainWindow.resizeEvent(self, event)
+    def resizeEvent(self,e):
+        super(QMainWindow,self).resizeEvent(e)
         self.OnResize.emit(self.size())
-
 
 class ClrsGUI():
     def __init__(self):
@@ -50,9 +49,11 @@ class ClrsGUI():
         log.info("main_window create size={size}".format(size=self.main_window.geometry()))
 
         self.central_widget = QWidget(self.main_window)
+        self.central_widget.resize(self.main_window.size())
+        self.central_widget.setObjectName("central_widget")
+
         self.main_window.setCentralWidget(self.central_widget)
         self.main_window.OnResize.connect(self.ReDrawAllPages)
-        self.main_window.setMinimumWidth(self.main_window.width())
 
     def Parse(self,
             backend,
@@ -70,8 +71,10 @@ class ClrsGUI():
         # if backend is a function
         if isinstance(backend, type(lambda: 0)):
             # then args and kwargs store the default of all variables
-            self.pages.append(Page(backend,*args,**kwargs))
+            self.pages.append(Page(backend, *args, **kwargs))
             self.pages[-1].setParent(self.central_widget)
+            self.pages[-1].setObjectName("page{0}".format(str(len(self.pages)-1)))
+            self.pages[-1].resize(self.central_widget.size())
             self.DrawFuncInPage(self.pages[0], backend,default_args,default_kwargs,args_desc,args_kwdesc)
             #self.main_window.resize(
             #    max([i.description.width() + i.description.x() + i.margin for i in self.pages]),
@@ -104,13 +107,14 @@ class ClrsGUI():
         if page.widget_list != []:
             top=0
             for i in range(len(page.widget_list)):
+                # get label text before widget
                 row_desc = page.widget_list[i].objectName()
                 if len(args_desc) > 0:
                     row_desc = args_desc[0]
                     args_desc = args_desc[1:]
                 if page.widget_list[i].objectName() in args_kwdesc:
                     row_desc = args_kwdesc[page.widget_list[i].objectName()]
-                page.form_layout.addRow(QLabel(row_desc), page.widget_list[i])
+                page.canvas_layout.addRow(QLabel(row_desc), page.widget_list[i])
 
                 # apply arguments given to the original func as default args
                 if len(default_args)>0:
@@ -124,15 +128,20 @@ class ClrsGUI():
                     geometry=page.widget_list[i].geometry(),
                     desc=row_desc))
 
-        # canvas resize
+        # canvas resize to fit widgets
         page.canvas.resize(
             page.canvas.width(),
-            page.canvas.y()+page.widget_list[-1].y()+page.widget_list[-1].height()+page.margin
+            page.widget_list[-1].size().width() + page.widget_list[-1].size().height()
         )
-        log.info("canvas:{0}".format(page.canvas.geometry()))
-        log.info("widget_scroll geometry={0}".format(page.widget_scroll.geometry()))
-        log.info("page geometry={0}".format(page.geometry()))
+        # layout resize to initial size
+        page = page.Current_Layout.apply(page)
+        self.main_window.setMinimumSize(
+            page.Current_Layout.minimum_window_size.width(),
+            page.Current_Layout.minimum_window_size.height()
+        )
+        self.main_window.adjustSize()
         log.info("end of draw page")
+
         # modify Z-order
         page.run_button.raise_()
         page.description.raise_()
@@ -145,7 +154,15 @@ class ClrsGUI():
         if self.tabs != None:
             self.tabs.resize(new_size)
         for page in self.pages:
-            page=page.Current_Layout(page,new_size)
+            page = page.Current_Layout.resize(page, new_size)
+            ### debug info
+            target = page.canvas_layout
+            while not(target.objectName()==None):
+                log.info("{0} reset to {1}".format(target.objectName(), target.geometry()))
+                if target.parent() != None:
+                    target = target.parent()
+                else:
+                    break
 
-        log.info("resize all pages to {0}".format(self.central_widget.geometry()))
+        log.info("resize finished")
 
