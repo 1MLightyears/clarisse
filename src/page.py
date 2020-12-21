@@ -12,7 +12,7 @@ on 20201211
 from PySide2.QtWidgets import QPushButton,QScrollArea,QLineEdit,QLabel,QWidget,QFormLayout
 from PySide2.QtCore import QThread, Signal, QSize, Qt
 
-from output_dialog import show_output
+from output_dialog import OutputDialog
 from layouts import Layout_Dict
 
 import log
@@ -116,21 +116,29 @@ class Page(QWidget):
             self.kwargs.update({i.objectName(): i.getValue()})
 
         # redirect standard output
-        self.redirect_IO = RedirectIO()
-        sys.stdout = self.redirect_IO
-        sys.stderr = self.redirect_IO
+        self.output_dialog = OutputDialog(self.func.__name__,parent=self)
+        sys.stdout = self.output_dialog
+        sys.stderr = self.output_dialog
 
         # avoid multiple clicks
         self.run_button.setText("Running...")
         self.run_button.setEnabled(False)
         self.run_thread.start()
+        log.info("func \"{0}\" started".format(self.func.__name__))
+
+        self.output_dialog.exec_()
 
     def Done(self):
         """
         Restore run_button.
         """
-        sys.stdout = self.stdout
-        sys.stderr = self.stderr
-        show_output(self.redirect_IO.read(),self.func.__name__,self.run_thread.ret)
+        log.info("func \"{0}\" ended".format(self.func.__name__))
+        self.output_dialog.setWindowTitle(
+            "Output of {0} - returns {1}".format(
+                self.func.__name__,
+                self.run_thread.ret
+            )
+        )
+        self.output_dialog.revive()
         self.run_button.setText("Run")
         self.run_button.setEnabled(True)

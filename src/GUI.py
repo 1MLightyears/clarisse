@@ -121,7 +121,7 @@ class ClrsGUI():
                     page.widget_list[i].setDefault(default_args[0])
                     default_args = default_args[1:]
                 if page.widget_list[i].objectName() in default_kwargs:
-                    page.widget_list[i].setDefault(default_args[page.widget_list[i].objectName()])
+                    page.widget_list[i].setDefault(default_kwargs[page.widget_list[i].objectName()])
 
                 log.info("add widget name={name}, geometry={geometry}, desc={desc}".format(
                     name=page.widget_list[i].objectName(),
@@ -155,7 +155,7 @@ class ClrsGUI():
             self.tabs.resize(new_size)
         for page in self.pages:
             page = page.Current_Layout.resize(page, new_size)
-            ### debug info
+            # debug info
             target = page.canvas_layout
             while not(target.objectName()==None):
                 log.info("{0} reset to {1}".format(target.objectName(), target.geometry()))

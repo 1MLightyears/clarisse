@@ -147,6 +147,12 @@ print(func())
 
 Of course I advise you to choose gooey if you're familiar to it and need deep customization, but if you only need a light-weight, pain-less, quick-deployment GUI framework, maybe Clarisse is an alternative!
 
+### I wanna make it better!
+
+You are 24/7 welcome! As an *end-stage hypo-comment-phobia patient*, ~10% of the lines are comments. With those comments one can start easily. I also have plans to write docs to describe the function of each part.
+
+If you bumped into some *insane* codes, please feel free to ask me directly.
+
 ### ...and, Future!
 
 - [ ] Add more layouts, make them available to get changed;
