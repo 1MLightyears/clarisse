@@ -36,18 +36,3 @@ def Clarisse(*args, **kwargs):
             return gui_func
     return middle
 
-###
-@Clarisse()
-def f(arg1: int, arg2: float, arg3: str):
-    """
-    dummy\\
-    docstring.
-    """
-    import time
-    for i in range(arg1):
-        print(i, 2 * i, sep=arg3)
-        assert i<10, "an error!"
-        time.sleep(arg2)
-    return 0
-
-print(f(arg1=5,arg2=0.8))
