@@ -10,7 +10,7 @@ on 20201211
 """
 from PySide2.QtCore import QSize
 
-import log
+from . import log
 
 ### Layouts
 # BaseLayout is not used, only to save code for __init__() and bind()

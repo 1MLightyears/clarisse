@@ -94,8 +94,21 @@ Note that if a type is not supported by Clarisse, it'll use an `ClrsUnknown` typ
 ##### Attention
 
 - if you used `typing.List[a_type,...]` , Clarisse will call a `a_type.__init__(arg_text:str)` to give an `a_type`object to the function, make sure you have appropriate constructor;
-
 - if you used `typing.Dict[key_type,value_type,...]` , Clarisse will call `key_type.__init__(key_text:str)`and `value_type.__init__(value_text:str)` to give an `{key_type:value_type}`dict to the function, make sure you have appropriate constructor.
+
+##### Icons
+
+Clarisse automaticly load icon under the current dir.
+
+For example, if a function named `func()` and is decorated by `@Clarisse()`, Clarisse will try to load `func.ico` from the current dir. 
+
+The icon file could also be chosen by argument:
+
+```python
+@Clarisse(icon="<path-to-icon>.ico")
+```
+
+this will load the `<path-to-icon>.ico` as the window icon.
 
 ##### Examples
 

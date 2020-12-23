@@ -13,7 +13,7 @@ from PySide2.QtWidgets import QLabel, QSpinBox, QLineEdit, QDoubleSpinBox, QText
 from PySide2.QtCore import Qt
 import typing
 
-import log
+from . import log
 
 __all__ = ["ClrsUnknown","ClrsInt", "ClrsFloat","ClrsString","ClrsList","ClrsBool","ClrsDict"]
 

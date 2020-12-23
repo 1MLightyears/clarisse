@@ -8,15 +8,16 @@ by 1MLightyears@gmail.com
 
 on 20201211
 """
-from analyze import AnalyzeFunc
-from page import Page
+from . import analyze
+from . import page
+from . import log
 
 import sys
-import log
+import os
 
 from PySide2.QtWidgets import QMainWindow, QApplication, QLabel,  QTabWidget,  QWidget
 from PySide2.QtCore import  Signal, QCoreApplication, QMetaObject, QSize
-from PySide2.QtGui import  QColor
+from PySide2.QtGui import  QColor, QIcon
 
 __all__=["ClrsGUI"]
 
@@ -61,6 +62,7 @@ class ClrsGUI():
             default_kwargs: dict = {},
             args_desc: list = [],
             args_kwdesc: dict = {},
+            icon: str = "",
             *args,**kwargs):
         """
         Parse the decorated.
@@ -68,10 +70,17 @@ class ClrsGUI():
         self.pages = []
         self.tabs = None
 
+        # try to load a prepared icon with backend.__name__ or a given path
+        if icon == "":
+            icon = backend.__name__ + ".ico"
+        if os.path.exists(icon):
+            log.info("load WindowIcon from path={0}".format(icon))
+            self.main_window.setWindowIcon(QIcon(icon))
+
         # if backend is a function
         if isinstance(backend, type(lambda: 0)):
             # then args and kwargs store the default of all variables
-            self.pages.append(Page(backend, *args, **kwargs))
+            self.pages.append(page.Page(backend, *args, **kwargs))
             self.pages[-1].setParent(self.central_widget)
             self.pages[-1].setObjectName("page{0}".format(str(len(self.pages)-1)))
             self.pages[-1].resize(self.central_widget.size())
@@ -100,7 +109,7 @@ class ClrsGUI():
         set them with appropriate initial values.
         """
         # inspect func
-        page.widget_list = AnalyzeFunc(func)
+        page.widget_list = analyze.AnalyzeFunc(func)
         log.info("start of draw page, widget_list={0}".format([i.__name__ for i in page.widget_list]))
 
         # add widgets to canvas

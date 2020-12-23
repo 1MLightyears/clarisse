@@ -13,14 +13,14 @@ import os
 import sys
 from functools import wraps
 
-from GUI import ClrsGUI
+from .GUI import ClrsGUI
 
-#from .analyze import AnalyzeFunc # TODO: uncomment the import before release
+from .analyze import AnalyzeFunc
 
 
 __all__ = ["Clarisse", "version"]
 
-version="v0.0.3"
+version="v0.0.4"
 
 def Clarisse(*args, **kwargs):
     def middle(func):

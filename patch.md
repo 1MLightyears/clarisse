@@ -1,12 +1,15 @@
 [toc]
 
-### ***v0.0.4***
-
-- [x] now output window can be updated live
-- [x] fix an error raised when `kwargs` are set when calling the decorated function.
+### ***v0.0.5***
 - [ ] run thread halts automatically when dialog is closed
 - [ ] add a switch for the GUI to return once Run is finished (one-turn-run)
-- [ ] set default icon for GUI
+
+### v0.0.4
+- [x] now output window can be updated live
+- [x] fix an error raised when `kwargs` are set when calling the decorated function.
+- [x] fix a package error
+- [x] set a default icon for GUI
+
 
 ### v0.0.3
 

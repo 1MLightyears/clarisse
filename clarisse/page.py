@@ -12,14 +12,14 @@ on 20201211
 from PySide2.QtWidgets import QPushButton,QScrollArea,QLineEdit,QLabel,QWidget,QFormLayout
 from PySide2.QtCore import QThread, Signal, QSize, Qt
 
-from output_dialog import OutputDialog
-from layouts import Layout_Dict
+from . import output_dialog
+from . import layouts
+from . import log
 
-import log
 import sys
 import io
 
-__all__=["Page","PageCanvas"]
+__all__=["Page"]
 
 class RedirectIO():
     def __init__(self, s: str = ""):
@@ -68,9 +68,9 @@ class Page(QWidget):
         self.vert_spacing =vert_spacing
         self.stdout = sys.stdout
         self.stderr = sys.stderr
-        self.Current_Layout = Layout_Dict["TopBottomLayout"]
-        if current_layout in Layout_Dict:
-            self.Current_Layout=Layout_Dict[current_layout](self)
+        self.Current_Layout = layouts.Layout_Dict["TopBottomLayout"]
+        if current_layout in layouts.Layout_Dict:
+            self.Current_Layout=layouts.Layout_Dict[current_layout](self)
 
         # Initiallize
         self.canvas = QWidget()
@@ -87,7 +87,7 @@ class Page(QWidget):
         # set canvas_layout
         self.canvas_layout.setMargin(self.margin)
         self.canvas_layout.setSpacing(self.vert_spacing)
-        self.canvas_layout.setRowWrapPolicy(self.canvas_layout.WrapLongRows)
+        self.canvas_layout.setRowWrapPolicy(self.canvas_layout.WrapAllRows)
 
         # default description is func.__doc__
         description = self.func.__doc__ if description=="" else description
@@ -116,7 +116,7 @@ class Page(QWidget):
             self.kwargs.update({i.objectName(): i.getValue()})
 
         # redirect standard output
-        self.output_dialog = OutputDialog(self.func.__name__,parent=self)
+        self.output_dialog = output_dialog.OutputDialog(self.func.__name__,parent=self)
         sys.stdout = self.output_dialog
         sys.stderr = self.output_dialog
 

@@ -9,10 +9,10 @@ by 1MLightyears@gmail.com
 on 20201208
 """
 import inspect
-import types_supported
 import typing
 
-import log
+from . import types_supported
+from . import log
 
 __all__=["AnalyzeFunc"]
 

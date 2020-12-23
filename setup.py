@@ -1,12 +1,15 @@
 import setuptools
+import clarisse
 
 with open("README.md","r",encoding="utf-8") as fh:
     long_description=fh.read()
 
+print("version={0}".format(clarisse.version))
+
 setuptools.setup(
         name="clarisse",
         license="Apache 2.0",
-        version="0.0.3",
+        version=clarisse.version[1:],
         author="Lightyears",
         author_email="1MLightyears@gmail.com",
         description="A light-weighted GUI framework for Python programs.",

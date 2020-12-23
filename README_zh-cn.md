@@ -94,8 +94,21 @@ Clarisse通过判断变量的类型来选择不同的控件以显示函数的每
 ##### 注意事项
 
 - 如果你用 `typing.List[a_type,...]` 标注变量类型, Clarisse 在返回这个变量的值时会以`a_type.__init__(arg_text:str)`的方式调用构造函数，返回一个 `a_type`类型的对象。确保`a_type`可以这样调用构造函数。
-
 - 如果你用 `typing.Dict[key_type,value_type,...]` 标注变量类型, Clarisse 在返回这个变量的值时会以`key_type.__init__(key_text:str)`和`value_type.__init__(value_text:str)` 的方式调用构造函数，返回一个 `{key_type:value_type}`类型的字典类型对象。确保`key_type`和`value_type`可以这样调用构造函数。
+
+##### 图标
+
+Clarisse会自动加载当前目录下的图标文件。
+
+比如，如果被 `@Clarisse()`装饰的函数名为`func()` , Clarisse会自动在当前目录下寻找`func.ico` 。
+
+这个图标文件也可以被`icon`变量所指定。
+
+```python
+@Clarisse(icon="<path-to-icon>.ico")
+```
+
+这将自动加载 `<path-to-icon>.ico` 作为窗口图标。
 
 ##### 范例
 
