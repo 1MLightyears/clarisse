@@ -80,15 +80,15 @@ class ClrsGUI():
         # if backend is a function
         if isinstance(backend, type(lambda: 0)):
             # then args and kwargs store the default of all variables
+            # one page for each function.
             self.pages.append(page.Page(backend, *args, **kwargs))
             self.pages[-1].setParent(self.central_widget)
             self.pages[-1].setObjectName("page{0}".format(str(len(self.pages)-1)))
-            self.pages[-1].resize(self.central_widget.size())
+            self.pages[-1].call_exit.connect(self.main_window.close)
+
+            # draw description(QLabel), the Run button, args as widgets in the current page.
             self.DrawFuncInPage(self.pages[0], backend,default_args,default_kwargs,args_desc,args_kwdesc)
-            #self.main_window.resize(
-            #    max([i.description.width() + i.description.x() + i.margin for i in self.pages]),
-            #    self.main_window.height()
-            #)  # resize main_window's width to show all the description
+
             self.main_window.setWindowTitle("{0} - Clarisse GUI".format(backend.__name__))
         elif isinstance(a, object):
             self.tabs = QTabWidget(self.central_widget)
@@ -175,3 +175,8 @@ class ClrsGUI():
 
         log.info("resize finished")
 
+    def getReturn(self):
+        """
+        Get the return value of the backend.
+        """
+        return self.pages[0].run_thread.ret # TODO: change here when class is supported

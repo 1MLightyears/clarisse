@@ -110,6 +110,18 @@ Clarisse会自动加载当前目录下的图标文件。
 
 这将自动加载 `<path-to-icon>.ico` 作为窗口图标。
 
+##### 单次运行
+
+通过设置Clarisse，可以让传入的函数只运行一次后就退出。
+
+将`single_pass`参数设为`True`来让GUI在函数运行结束后立刻退出： `@Clarisse(single_pass=True)` 
+
+##### Docstring的处理
+
+在绝大多数场合，Clarisse会自动读取函数的docstring(即 `func.__doc__`)并把它们显示出来，作为对其功能的简要介绍。不过，如果你已经写好了一个精巧的docstring，Clarisse也会对它善加利用。
+
+现在，如果函数有一个numpy风格的docstring，Clarisse会把连续的六个连字符(`------`)当做段落与段落之间的分割标记，这也是Markdown语法中的分割线标记。第一个段落将被截取出来作为介绍。
+
 ##### 范例
 
 ```python
@@ -146,6 +158,16 @@ print(func())
 ```
 
 <img src="./img/img3.png" style="zoom : 65%">
+
+```python
+@Clarisse(single_pass=True)
+def f(this_is_arg1:int,this_is_arg2:str,this_is_arg3:list):
+    """
+    ...				#<- numpy.ndarray.__doc__
+    """
+```
+
+<img src="./img/img4.png" style="zoom : 65%">
 
 ### 看起来不错，但是...
 

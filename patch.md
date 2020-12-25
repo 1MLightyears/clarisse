@@ -1,8 +1,11 @@
 [toc]
 
 ### ***v0.0.5***
+
+- [x] add a docstring( i.e. `__doc__`) parser
+
+- [x] add a switch, `single_pass`, for the GUI to return once Run is finished
 - [ ] run thread halts automatically when dialog is closed
-- [ ] add a switch for the GUI to return once Run is finished (one-turn-run)
 
 ### v0.0.4
 - [x] now output window can be updated live

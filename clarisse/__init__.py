@@ -32,7 +32,7 @@ def Clarisse(*args, **kwargs):
                 w.Parse(func,default_args,default_kwargs,*args,**kwargs)
                 w.main_window.show()
                 w.app.exec_()
-                return w.pages[0].run_thread.ret
+                return w.getReturn()
             return gui_func
     return middle
 

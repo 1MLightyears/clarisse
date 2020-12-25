@@ -3,6 +3,7 @@ src/test.py
 *.ui
 make.bat
 setup.py
+test.py
 Clarisse.log
 
 # Byte-compiled / optimized / DLL files

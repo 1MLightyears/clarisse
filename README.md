@@ -110,6 +110,18 @@ The icon file could also be chosen by argument:
 
 this will load the `<path-to-icon>.ico` as the window icon.
 
+##### Single-pass run
+
+Clarisse can be set to run once only.
+
+Set the `single_pass` argument to `True` to tell the GUI to return once the function is finished, like `@Clarisse(single_pass=True)`.
+
+##### Docstring parser
+
+In most cases, Clarisse read the docstring of the function (i.e. `func.__doc__`) and show it as a description of the function. But if you have already written a well-designed docstring, Clarisse can also make full use of it.
+
+Now, if the function has a numpy-style docstring,  Clarisse will take six hyphens(`------`), which is also the splitor in Markdown syntax, as separators between paragraphs. The first paragraph will be treated as the description of the function.
+
 ##### Examples
 
 ```python
@@ -146,6 +158,16 @@ print(func())
 ```
 
 <img src="./img/img3.png" style="zoom : 65%">
+
+```python
+@Clarisse(single_pass=True)
+def f(this_is_arg1:int,this_is_arg2:str,this_is_arg3:list):
+    """
+    ...				#<- numpy.ndarray.__doc__
+    """
+```
+
+<img src="./img/img4.png" style="zoom : 65%">
 
 ### Well done, but...
 

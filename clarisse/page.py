@@ -18,6 +18,7 @@ from . import log
 
 import sys
 import io
+import re
 
 __all__=["Page"]
 
@@ -47,6 +48,8 @@ class RunThread(QThread):
         return self.ret
 
 class Page(QWidget):
+    call_exit = Signal(str) # arg is function name (self.func.__name__) for each page in pages
+
     def __init__(self,
             func=None,
             func_args=[],
@@ -55,6 +58,7 @@ class Page(QWidget):
             vert_spacing=10,
             current_layout="TopBottomLayout",
             description="",
+            single_pass:bool=False,
             *args, **kwargs
         ):
         super().__init__()
@@ -65,13 +69,13 @@ class Page(QWidget):
         self.kwargs = func_kwargs
         self.widget_list = []
         self.margin = margin
-        self.vert_spacing =vert_spacing
+        self.vert_spacing = vert_spacing
+        self.single_pass = single_pass
         self.stdout = sys.stdout
         self.stderr = sys.stderr
         self.Current_Layout = layouts.Layout_Dict["TopBottomLayout"]
         if current_layout in layouts.Layout_Dict:
-            self.Current_Layout=layouts.Layout_Dict[current_layout](self)
-
+            self.Current_Layout = layouts.Layout_Dict[current_layout](self)
         # Initiallize
         self.canvas = QWidget()
         self.canvas.setObjectName("canvas")
@@ -90,8 +94,7 @@ class Page(QWidget):
         self.canvas_layout.setRowWrapPolicy(self.canvas_layout.WrapAllRows)
 
         # default description is func.__doc__
-        description = self.func.__doc__ if description=="" else description
-        self.description = QLabel(description) # doesn't need to scroll
+        self.description = QLabel(self.getDescription(description)) # doesn't need to scroll
         self.description.setParent(self)
         self.description.setWordWrap(True)
         self.description.setTextFormat(Qt.MarkdownText)
@@ -107,11 +110,37 @@ class Page(QWidget):
         self.run_thread = RunThread(self.func, self.args, self.kwargs)
         self.run_thread.finished.connect(self.Done)
 
+    def getDescription(self, pre_defined_desc: str = ""):
+        """
+        returns the description of current page.
+        """
+        if pre_defined_desc.strip(" \r\n") != "":
+            return pre_defined_desc
+        if self.func == None:
+            log.error("No backend function found")
+            return ""
+        docstring = self.func.__doc__.strip(" \r\n\t")
+        if docstring == "":
+            log.warning("Bad docstring for function {0}".format(self.func.__name__))
+            return "function {0}".format(self.func.__name__)
+
+        # suppose "------" is the splitor between function description and arguments description
+        # in numpy-style docstring, "------" has "Parameter" before it.
+        # match it with "[a-zA-Z_]*?[\n\r]*?".
+        desc_part = re.match(r"([\S\s\n\r]+?)[a-z_]*?[\n\r\s]*?------", docstring, re.M|re.I)
+        if desc_part == None:
+            log.info("whole description:\n{0}".format(docstring))
+            return docstring
+        log.info("recognized description:\n{0}".format(desc_part.group(1)))
+        return desc_part.group(1)
+
+
     ### slot functions
     def Run(self):
         """
-        Run self.func in another thread.
+        Run the function(self.func) in another thread(self.run_thread).
         """
+        # load args
         for i in self.widget_list:
             self.kwargs.update({i.objectName(): i.getValue()})
 
@@ -130,7 +159,8 @@ class Page(QWidget):
 
     def Done(self):
         """
-        Restore run_button.
+        Done is called when the function is finished(i.e. self.run_thread.finished is omitted)
+        Restore the run button.
         """
         log.info("func \"{0}\" ended".format(self.func.__name__))
         self.output_dialog.setWindowTitle(
@@ -142,3 +172,5 @@ class Page(QWidget):
         self.output_dialog.revive()
         self.run_button.setText("Run")
         self.run_button.setEnabled(True)
+        if self.single_pass:
+            self.call_exit.emit(self.func.__name__)
