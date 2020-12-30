@@ -37,15 +37,15 @@ def func(arg1,arg2:int,arg3:str="have a try")->bool:
 @Clarisse()
 def func(arg1,arg2:int,arg3:str="have a try") -> bool:
     """This is only a ***test*** function\\
-    but enough to show what clarisse do!"""
+    but enough to show what clarisse can do!"""
     print("arg1 is {0}".format(arg1))
     print(arg3.upper())
     return arg2>10
 
-print(func("this is clarisse output",0))
+print(func("this is output",0))
 ```
 
-<img src="./img/img1.png">
+<img src="./img/img1.png" style="zoom : 80%">
 
 ##### Clarisse 理解你的需求！
 
@@ -186,16 +186,55 @@ def f(this_is_arg1:int,this_is_arg2:str,this_is_arg3:list):
 
 完全欢迎——事实上，作为一个*打注释强迫症星人*，~10%的代码都是解释这段代码在做什么的注释，这使得重构和接续开发要相对容易的多。我也计划写一些说明文档来介绍每个模块是做什么的。
 
-如果你遇到了一些谜之代码，可以随时直接问我。
+如果你遇到了一些意☆义☆不☆明的谜之代码，可以随时直接问我。
+
+如果你不对直接贡献代码有兴趣，也可以在[patch](./patch.md)的*future*部分找到讨论新功能的提案入口。
 
 ### ...以及，未来的新功能！
 
-- [ ] 增加更多的布局，可以更换布局；
-- [ ] 使用QSS样式表（类似于CSS样式表）来美化控件和窗体；
-- [ ] 添加对于类的支持；
-- [ ] 增加对更多类型的支持；
+- [ ] 未来会有更多可以更换的布局；
+- [ ] 也将可以使用QSS样式表（类似于CSS样式表）来美化控件和窗体；
+- [ ] Clarisse将添加对于类的支持；
+- [ ] 也会增加对更多类型的支持；
 
 ......
+
+### FAQ
+
+- Q: 报错:`qt.qpa.plugin: Could not load the Qt platform plugin "***" in ...`
+
+  - A: 你没有完整的Qt运行库，或是PySide2没能找到它们。
+
+    在Windows平台上，将下列文件
+
+    ```
+    \Anaconda3\Lib\site-packages\PySide2\plugins\platforms\qminimal.dll
+    \Anaconda3\Lib\site-packages\PySide2\plugins\platforms\qoffscreen.dll
+    \Anaconda3\Lib\site-packages\PySide2\plugins\platforms\qwindows.dll
+    ```
+
+    复制到
+
+    `\Anaconda3\Library\plugins\platforms\`。
+
+    在Linux平台（测试使用Ubuntu 18.04），尝试 `apt install python3-pyqt5`。
+
+- Q: 报错:`qt.qpa.plugin: Could not find the Qt platform plugin “***“ in ... `
+
+  - A: PyQt5/PySide2 只是Qt和Python的binding，本身并不能实现功能，实现功能需要对应平台的Qt plugin。
+
+    在`import` 部分后加入这段代码：
+
+    ```python
+    import PySide2
+    import os
+    
+    dirname = os.path.dirname(PySide2.__file__) 
+    plugin_path = os.path.join(dirname, 'plugins', 'platforms')
+    os.environ['QT_QPA_PLATFORM_PLUGIN_PATH'] = plugin_path
+    ```
+
+    或者你也可以写个新的.py文件并在代码中import它，只要保证在Clarisse调用前执行即可。
 
 ### 致谢
 

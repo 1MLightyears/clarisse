@@ -4,7 +4,7 @@
 
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/clarisse?style=plastic)![PyPI](https://img.shields.io/pypi/v/clarisse?style=plastic)
 
-:cn::<a href="./README_zh-cn.md">说明文档</a>
+:cn::[说明文档](./README_zh-cn.md)
 
 Clarisse is a light-weighted Python function GUI framework.
 
@@ -37,15 +37,15 @@ Any time when `func()` is called, a GUI will be showed, allowing user to manuall
 @Clarisse()
 def func(arg1,arg2:int,arg3:str="have a try") -> bool:
     """This is only a ***test*** function\\
-    but enough to show what clarisse do!"""
+    but enough to show what clarisse can do!"""
     print("arg1 is {0}".format(arg1))
     print(arg3.upper())
     return arg2>10
 
-print(func("this is clarisse output",0))
+print(func("this is output",0))
 ```
 
-<img src="./img/img1.png">
+<img src="./img/img1.png"  style="zoom : 80%">
 
 ##### Clarisse understands your need! 
 
@@ -188,14 +188,53 @@ You are 24/7 welcome! As an *end-stage hypo-comment-phobia patient*, ~10% of the
 
 If you bumped into some *insane* codes, please feel free to ask me directly.
 
+If you're not interested in contribute codes to Clarisse, you could also find the entrance for discussion about new feature requests at the *future* paragraph of [patch](./patch.md).
+
 ### ...and, Future!
 
-- [ ] Add more layouts, make them available to get changed;
-- [ ] Apply QSS(CSS-like) style sheets for widgets to make them look better;
-- [ ] Support classes;
-- [ ] Add more supported types;
+- [ ] There will be more layouts and be available to get changed;
+- [ ] QSS(CSS-like) style will be applied for sheets & widgets to make them look better;
+- [ ] Clarisse will support classes;
+- [ ] And also support more types;
 
 ......
+
+### FAQ
+
+- Q: error:`qt.qpa.plugin: Could not load the Qt platform plugin "***" in ...`
+
+  - A: you don't have all the Qt library, or you have but PySide2 failed to find them.
+
+    On Windows, try copy
+
+    ```
+    \Anaconda3\Lib\site-packages\PySide2\plugins\platforms\qminimal.dll
+    \Anaconda3\Lib\site-packages\PySide2\plugins\platforms\qoffscreen.dll
+    \Anaconda3\Lib\site-packages\PySide2\plugins\platforms\qwindows.dll
+    ```
+
+    to
+
+    `\Anaconda3\Library\plugins\platforms\`.
+
+    On Linux (tested on Ubuntu 18.04), try `apt install python3-pyqt5`.
+
+- Q: error:`qt.qpa.plugin: Could not find the Qt platform plugin “***“ in ... `
+
+  - A: PyQt5/PySide2 is only the binding between Qt and Python. This error means that Python failed to find the real "worker" (which is Qt plugin for your platform).
+
+    Add below to your code after `import` part:
+
+    ```python
+    import PySide2
+    import os
+    
+    dirname = os.path.dirname(PySide2.__file__) 
+    plugin_path = os.path.join(dirname, 'plugins', 'platforms')
+    os.environ['QT_QPA_PLATFORM_PLUGIN_PATH'] = plugin_path
+    ```
+
+    or write it in a new .py file and import it, anyway make sure it runs before Clarisse is called.
 
 ### Acknowledgements
 
