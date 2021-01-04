@@ -17,9 +17,10 @@ import sys
 
 __all__ = ["OutputDialog"]
 
+
 class OutputDialog(QDialog):
-    def __init__(self, func_name:str="",s: str = "", *args, **kwargs):
-        super(OutputDialog,self).__init__(*args,**kwargs)
+    def __init__(self, func_name: str = "", s: str = "", *args, **kwargs):
+        super(OutputDialog, self).__init__(*args, **kwargs)
         self.resize(400, 300)
         self.setWindowModality(Qt.NonModal)
         self.setWindowTitle("Output of {0}".format(func_name))

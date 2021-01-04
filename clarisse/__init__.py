@@ -20,19 +20,22 @@ from .analyze import AnalyzeFunc
 
 __all__ = ["Clarisse", "version"]
 
-version="v0.0.4"
+version = "v0.0.4"
+
 
 def Clarisse(*args, **kwargs):
     def middle(func):
-        if isinstance(func,type(lambda :0)):
+        if isinstance(func, type(lambda: 0)):
+
             @wraps(func)
             def gui_func(*default_args, **default_kwargs):
-                nonlocal func,args,kwargs
-                w=ClrsGUI()
-                w.Parse(func,default_args,default_kwargs,*args,**kwargs)
+                nonlocal func, args, kwargs
+                w = ClrsGUI()
+                w.Parse(func, default_args, default_kwargs, *args, **kwargs)
                 w.main_window.show()
                 w.app.exec_()
                 return w.getReturn()
-            return gui_func
-    return middle
 
+            return gui_func
+
+    return middle

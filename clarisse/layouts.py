@@ -30,11 +30,13 @@ class BaseLayout:
 
         return page
 
+
 # TopBottom is the default layout
 class TopBottomLayout(BaseLayout):
     """
     set an top-bottom layout for page.
     """
+
     def apply(self, page=None):
         page = self.bind(page or self.page)
 
@@ -45,17 +47,20 @@ class TopBottomLayout(BaseLayout):
         # run_button should be placed below description
         page.run_button.setGeometry(
             page.margin,
-            page.description.y()+page.description.height()+page.margin,
-            page.width() - 2*page.margin,
-            page.run_button.height()
+            page.description.y() + page.description.height() + page.margin,
+            page.width() - 2 * page.margin,
+            page.run_button.height(),
         )
 
         # widget_scroll should be placed between the end of page and run_button
         page.widget_scroll.setGeometry(
             0,
-            page.run_button.y()+page.run_button.height() + page.margin,
+            page.run_button.y() + page.run_button.height() + page.margin,
             page.width(),
-            page.height() - page.run_button.y() - page.run_button.height()-page.margin
+            page.height()
+            - page.run_button.y()
+            - page.run_button.height()
+            - page.margin,
         )
 
         # canvas should be placed in widget_scroll with a margin = page.margin
@@ -63,62 +68,66 @@ class TopBottomLayout(BaseLayout):
             page.margin,
             page.margin,
             page.widget_scroll.width() - page.margin,
-            page.canvas.height()
+            page.canvas.height(),
         )
         page.canvas_layout.setGeometry(page.canvas.geometry())
 
-        self.minimum_window_size=QSize(320,480)
+        self.minimum_window_size = QSize(320, 480)
         return page
 
     def resize(self, page, page_size):
-        page=page or self.page
+        page = page or self.page
         page.resize(page_size)
 
         # run_button should be always placed below description
         page.run_button.setGeometry(
             page.margin,
-            page.description.y()+page.description.height()+page.margin,
-            page_size.width() - 2*page.margin,
-            page.run_button.height()
+            page.description.y() + page.description.height() + page.margin,
+            page_size.width() - 2 * page.margin,
+            page.run_button.height(),
         )
 
         # widgets should be placed below run_button
         page.widget_scroll.resize(
             page.width(),
-            page.height() - page.run_button.y() - page.run_button.height()-page.margin
+            page.height()
+            - page.run_button.y()
+            - page.run_button.height()
+            - page.margin,
         )
         page.canvas.resize(
-            page.widget_scroll.width() - page.margin,
-            page.canvas.height()
+            page.widget_scroll.width() - page.margin, page.canvas.height()
         )
 
         return page
+
 
 class LeftRightLayout(BaseLayout):
     """
     set an left-right layout for page.
     """
+
     def apply(self, page=None):
         page = self.bind(page or self.page)
 
         # description should be placed on the top-left part of page
-        page.description.move(page.margin,page.margin)
+        page.description.move(page.margin, page.margin)
         page.description.adjustSize()
 
         # run_button should be placed at the bottom-left part of page
         page.run_button.setGeometry(
             page.margin,
-            page.height()-page.run_button.height()-page.margin,
+            page.height() - page.run_button.height() - page.margin,
             page.description.width(),
-            page.run_button.height()
+            page.run_button.height(),
         )
 
         # widget_scroll should be placed on the rest right place of the page
         page.widget_scroll.setGeometry(
-            page.description.x()+page.description.width() + page.margin,
+            page.description.x() + page.description.width() + page.margin,
             0,
             page.width() - page.description.width() - page.margin,
-            page.height() - page.margin
+            page.height() - page.margin,
         )
 
         # canvas should be placed in widget_scroll with a margin = page.margin
@@ -126,7 +135,7 @@ class LeftRightLayout(BaseLayout):
             page.margin,
             page.margin,
             page.widget_scroll.width() - page.margin,
-            page.canvas.height()
+            page.canvas.height(),
         )
         page.canvas_layout.setGeometry(page.canvas.geometry())
 
@@ -134,26 +143,24 @@ class LeftRightLayout(BaseLayout):
         return page
 
     def resize(self, page, page_size):
-        page=page or self.page
+        page = page or self.page
         page.resize(page_size)
 
         # run_button should be always placed at the left-bottom of the page
-        page.run_button.move(page.margin,page.height()-page.run_button.height()-page.margin)
+        page.run_button.move(
+            page.margin, page.height() - page.run_button.height() - page.margin
+        )
 
         # widgets should be placed on the right of the page
         page.widget_scroll.resize(
-            page.width()-page.description.width()-page.margin,
-            page.height()
+            page.width() - page.description.width() - page.margin, page.height()
         )
         page.canvas.resize(
-            page.widget_scroll.width() - page.margin,
-            page.canvas.height()
+            page.widget_scroll.width() - page.margin, page.canvas.height()
         )
 
         return page
 
+
 ### interface
-Layout_Dict = {
-    "TopBottomLayout": TopBottomLayout,
-    "LeftRightLayout": LeftRightLayout
-}
+Layout_Dict = {"TopBottomLayout": TopBottomLayout, "LeftRightLayout": LeftRightLayout}
